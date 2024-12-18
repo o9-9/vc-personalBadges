@@ -14,7 +14,7 @@
     <img src="github/gifs/modal.gif" width=700> <br> <br>
     <img src="github/gifs/context.gif" width=300>
     <img src="github/gifs/badge.gif" width=300> <br>
-    <img src="github/gifs/category.gif" width=300> <br> <br>
+    <img src="github/gifs/category.gif" width=700> <br> <br>
     <img src="github/gifs/modal2.gif" width=700>
     <br>
 </div>
