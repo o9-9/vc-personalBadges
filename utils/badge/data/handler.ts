@@ -20,14 +20,14 @@ let dev: ProfileBadge;
 
 // why not? who says I can't have a global badge for making the plugin lol
 function fetchDevBadge() {
-    fetch(DEVELOPER_BADGE_URL).then(async function(response) {
+    fetch(DEVELOPER_BADGE_URL).then(async function (response) {
         const json: IPersonalBadge = await response?.json();
         if (!json) return;
 
-        if (dev) Vencord.Api.Badges.removeBadge(dev);
-        else dev = iPersonalToProfile(json);
-        Vencord.Api.Badges.addBadge(dev);
-    })
+        if (dev) Vencord.Api.Badges.removeProfileBadge(dev);
+        dev = iPersonalToProfile(json);
+        Vencord.Api.Badges.addProfileBadge(dev);
+    });
 }
 
 
@@ -41,7 +41,7 @@ export const CategoryHandler = (new class {
             if (!category) return false;
 
             for (let badge of category.badges ?? [])
-                await BadgeStore.BadgeHandler.deregister(c_id, badge.id)
+                await BadgeStore.BadgeHandler.deregister(c_id, badge.id);
 
             if (await BadgeStore.deregisterCategory(c_id))
                 cache.delete(c_id);
@@ -103,7 +103,7 @@ export const CategoryHandler = (new class {
             return false;
         }
     }
-})
+});
 
 export default (new class BadgeHandler {
 
@@ -111,10 +111,10 @@ export default (new class BadgeHandler {
 
     public async refreshCache() {
         let count: number = 0;
-        
+
         try {
             const registered = await BadgeStore.registered();
-            
+
             Object.entries(registered).map((data) => {
                 for (let v of data[1].badges ?? []) {
                     v.profileBadge = iPersonalToProfile(v);
@@ -122,7 +122,7 @@ export default (new class BadgeHandler {
                 }
                 cache.set(data[0], data[1]);
             });
-            
+
             PluginLogger.info(`(${cache.size}|${count}) Cache successfully refreshed.`);
         } catch (error) {
             PluginLogger.warn(`Could not successfully refresh cache. (${cache.size}|${count})`);
@@ -141,7 +141,7 @@ export default (new class BadgeHandler {
         try {
             cache.forEach((data) => {
                 for (let badge of data.badges ?? []) {
-                    Vencord.Api.Badges.removeBadge(defineProfileBadge(badge.profileBadge));
+                    Vencord.Api.Badges.removeProfileBadge(defineProfileBadge(badge.profileBadge));
                     count++;
                 }
             });
@@ -161,7 +161,7 @@ export default (new class BadgeHandler {
             await this.refreshCache();
             cache.forEach((data) => {
                 for (let badge of data.badges ?? []) {
-                    Vencord.Api.Badges.addBadge(defineProfileBadge(badge.profileBadge));
+                    Vencord.Api.Badges.addProfileBadge(defineProfileBadge(badge.profileBadge));
                     count++;
                 }
             });
@@ -178,7 +178,7 @@ export default (new class BadgeHandler {
         try {
             let category = cache.get(c_id);
             if (!category) return false;
-            
+
             let badge = api.removeBadge(category.id, b_id);
             if (!badge) return false;
 
@@ -201,7 +201,7 @@ export default (new class BadgeHandler {
             const category = cache.get(c_id);
             if (!category) return false;
 
-            let old = cache.get(value.c_id)
+            let old = cache.get(value.c_id);
             if (!old) return false;
 
             let badge = api.removeBadge(c_id !== value.c_id ? old.id : category.id, value.id);
@@ -234,8 +234,8 @@ export default (new class BadgeHandler {
         try {
             if (Array.from(cache.entries()).some((data: [string, IPBadgeCategory]) => {
                 return data[1].badges?.some(x => {
-                    let {id: _, c_id: __, profileBadge: ___, ...cached} = x;
-                    let {id: ____, c_id: _____, profileBadge: ______, ...object} = value;
+                    let { id: _, c_id: __, profileBadge: ___, ...cached } = x;
+                    let { id: ____, c_id: _____, profileBadge: ______, ...object } = value;
                     // PluginLogger.log(cached, object);
                     return JSON.stringify(cached) === JSON.stringify(object);
                 });
