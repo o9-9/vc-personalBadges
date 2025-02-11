@@ -29,7 +29,7 @@ export function somethingWentWrong() {
 export function saveJSONFile(filename: string, data: any) {
     const jsonData = JSON.stringify(data ?? {}, null, 2);
 
-    if (IS_WEB) {
+    if (IS_WEB || IS_VESKTOP) {
         const file = new File([jsonData], filename, { type: "application/json" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(file);
@@ -45,7 +45,7 @@ export function saveJSONFile(filename: string, data: any) {
 }
 
 export async function openJSONFile(onLoad: (data: any) => any): Promise<any> {
-    if (IS_WEB) {
+    if (IS_WEB || IS_VESKTOP) {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "application/json";
