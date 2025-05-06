@@ -1,8 +1,8 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
 import { createStore } from "@api/DataStore";
 import { DataStore } from "@api/index";
@@ -19,14 +19,13 @@ export async function registered(): Promise<Record<string, IPBadgeCategory>> {
         const data = await DataStore.entries(BadgeStore);
         const badges: Record<string, IPBadgeCategory> = {};
 
-        data.forEach((data) => badges[data[0].toString()] = data[1]);
+        data.forEach(data => badges[data[0].toString()] = data[1]);
         return badges;
     } catch (error) {
         PluginLogger.error(error);
         return {};
     }
 }
-
 
 export async function createCID(name: string): Promise<string | undefined> {
     try {
@@ -36,7 +35,7 @@ export async function createCID(name: string): Promise<string | undefined> {
         const random = Math.random().toString(36).substring(2, 9);
         const c_id = `${entries.length}.pb_category.${random}`;
 
-        let predicate = (await Promise.all(entries)).some(x => x[0] === c_id || x[1].name === name);
+        const predicate = (await Promise.all(entries)).some(x => x[0] === c_id || x[1].name === name);
         if (predicate) return createCID(name);
 
         return c_id;
@@ -62,18 +61,18 @@ export async function updateCategory(value: IPBadgeCategory): Promise<boolean> {
     try {
         const category = await DataStore.get(value.id, BadgeStore);
         if (!category) return false;
-        
+
         const badges: IPersonalBadge[] = [];
-        for (let badge of value.badges ?? []) {
-            let { profileBadge: _, ...object } = badge;
+        for (const badge of value.badges ?? []) {
+            const { profileBadge: _, ...object } = badge;
             badges.push(object);
         }
 
         category.name = value.name;
         category.icon = value.icon;
         category.badges = badges;
-        
-        await DataStore.set(value.id, category, BadgeStore)
+
+        await DataStore.set(value.id, category, BadgeStore);
         return true;
     } catch (error) {
         PluginLogger.error(error);
@@ -87,8 +86,8 @@ export async function registerCategory(value: IPBadgeCategory): Promise<boolean>
         if (!c_id) return false;
 
         const badges: IPersonalBadge[] = [];
-        for (let badge of value.badges ?? []) {
-            let { ...object } = badge;
+        for (const badge of value.badges ?? []) {
+            const { ...object } = badge;
 
             const b_id = await createBID(value, true);
             if (!b_id) continue;
@@ -116,7 +115,7 @@ export async function createBID(c: IPBadgeCategory, isImporting: boolean = false
         const random = Math.random().toString(36).substring(2, 9);
         const b_id = `${isImporting ? c.badges.length - 1 : c.badges.length}.p_badge.${random}`;
 
-        let predicate = (await Promise.all(c.badges)).some(x => x.id === b_id);
+        const predicate = (await Promise.all(c.badges)).some(x => x.id === b_id);
         if (predicate) return createBID(c);
 
         return b_id;
@@ -130,8 +129,8 @@ export async function deregisterBadge(c_id: string, b_id: string): Promise<boole
     try {
         const category: IPBadgeCategory | undefined = await DataStore.get(c_id, BadgeStore);
         if (!category) return false;
-        
-        let badge = category.badges?.find(x => x.id === b_id);
+
+        const badge = category.badges?.find(x => x.id === b_id);
         if (!badge) return false;
 
         category.badges?.splice(category.badges.indexOf(badge), 1);
@@ -148,10 +147,10 @@ export async function updateBadge(c_id: string, value: IPersonalBadge): Promise<
         const category: IPBadgeCategory | undefined = await DataStore.get(c_id, BadgeStore);
         if (!category) return false;
 
-        let old: IPBadgeCategory | undefined = await DataStore.get(value.c_id, BadgeStore);
+        const old: IPBadgeCategory | undefined = await DataStore.get(value.c_id, BadgeStore);
         if (!old) return false;
 
-        let badge = c_id !== value.c_id ? old.badges?.find(x => x.id === value.id) : category.badges?.find(x => x.id === value.id);
+        const badge = c_id !== value.c_id ? old.badges?.find(x => x.id === value.id) : category.badges?.find(x => x.id === value.id);
         if (!badge) return false;
 
         if (c_id !== value.c_id) {
@@ -160,7 +159,7 @@ export async function updateBadge(c_id: string, value: IPersonalBadge): Promise<
         } else category.badges?.splice(category.badges.indexOf(badge), 1);
 
         value.c_id = category.id;
-        let {profileBadge: _, ...noProfBadge} = value;
+        const { profileBadge: _, ...noProfBadge } = value;
         category.badges?.push(noProfBadge);
 
         await DataStore.update(c_id, () => category, BadgeStore);
@@ -181,7 +180,7 @@ export async function registerBadge(c_id: string, value: IPersonalBadge): Promis
 
         value.id = b_id;
         value.c_id = category.id;
-        let {profileBadge: _, ...noProfBadge} = value;
+        const { profileBadge: _, ...noProfBadge } = value;
         category.badges?.push(noProfBadge);
 
         await DataStore.set(c_id, category, BadgeStore);

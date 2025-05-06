@@ -1,16 +1,16 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
 import { ProfileBadge } from "@api/Badges";
-import { defineProfileBadge, iPersonalToProfile } from "..";
+
 import { IPBadgeCategory, IPersonalBadge } from "../../../types";
 import { DEVELOPER_BADGE_URL, PluginLogger } from "../../../utils/constants";
-
-import * as BadgeStore from '.';
-import * as api from '../../api';
+import * as api from "../../api";
+import { defineProfileBadge, iPersonalToProfile } from "..";
+import * as BadgeStore from ".";
 
 
 const cache = new Map<string, IPBadgeCategory>();
@@ -37,17 +37,17 @@ export const CategoryHandler = (new class {
 
     public async deregister(c_id: string): Promise<boolean> {
         try {
-            let category = cache.get(c_id);
+            const category = cache.get(c_id);
             if (!category) return false;
 
-            for (let badge of category.badges ?? [])
+            for (const badge of category.badges ?? [])
                 await BadgeStore.BadgeHandler.deregister(c_id, badge.id);
 
             if (await BadgeStore.deregisterCategory(c_id))
                 cache.delete(c_id);
             else return false;
 
-            PluginLogger.info(`(${c_id}) \"${category.name}\" category successfully deregistered.`);
+            PluginLogger.info(`(${c_id}) Category "${category.name}" successfully deregistered.`);
             return true;
         } catch (error) {
             PluginLogger.warn(`Could not successfully deregister category. (${c_id})`);
@@ -64,7 +64,7 @@ export const CategoryHandler = (new class {
                 cache.set(value.id, value);
             } else return false;
 
-            PluginLogger.info(`(${value.id}) \"${value.name}\" category successfully updated.`);
+            PluginLogger.info(`(${value.id}) Category "${value.name}" successfully updated.`);
             return true;
         } catch (error) {
             PluginLogger.warn(`Could not successfully update category. (${value.id})`);
@@ -85,17 +85,17 @@ export const CategoryHandler = (new class {
             })) return false;
 
             if (await BadgeStore.registerCategory(value)) {
-                for (let badge of value.badges ?? [])
+                for (const badge of value.badges ?? [])
                     badge.profileBadge = iPersonalToProfile(badge);
                 cache.set(value.id, value);
             } else return false;
 
-            for (let badge of value.badges ?? []) {
+            for (const badge of value.badges ?? []) {
                 if (!api.addBadge(value.id, badge.id)) continue;
-                PluginLogger.info(`(${value.id}) \"${badge.tooltip}\" (${badge.id}) badge successfully registered.`);
+                PluginLogger.info(`(${value.id}) Badge "${badge.tooltip}" (${badge.id}) successfully registered.`);
             }
 
-            PluginLogger.info(`(${value.id}) \"${value.name}\" category successfully registered.`);
+            PluginLogger.info(`(${value.id}) Category "${value.name}" successfully registered.`);
             return true;
         } catch (error) {
             PluginLogger.warn(`Could not successfully register category. (${value.id})`);
@@ -115,8 +115,8 @@ export default (new class BadgeHandler {
         try {
             const registered = await BadgeStore.registered();
 
-            Object.entries(registered).map((data) => {
-                for (let v of data[1].badges ?? []) {
+            Object.entries(registered).map(data => {
+                for (const v of data[1].badges ?? []) {
                     v.profileBadge = iPersonalToProfile(v);
                     count++;
                 }
@@ -139,8 +139,8 @@ export default (new class BadgeHandler {
         let count: number = 0;
 
         try {
-            cache.forEach((data) => {
-                for (let badge of data.badges ?? []) {
+            cache.forEach(data => {
+                for (const badge of data.badges ?? []) {
                     Vencord.Api.Badges.removeProfileBadge(defineProfileBadge(badge.profileBadge));
                     count++;
                 }
@@ -159,8 +159,8 @@ export default (new class BadgeHandler {
 
         try {
             await this.refreshCache();
-            cache.forEach((data) => {
-                for (let badge of data.badges ?? []) {
+            cache.forEach(data => {
+                for (const badge of data.badges ?? []) {
                     Vencord.Api.Badges.addProfileBadge(defineProfileBadge(badge.profileBadge));
                     count++;
                 }
@@ -176,10 +176,10 @@ export default (new class BadgeHandler {
 
     public async deregister(c_id: string, b_id: string): Promise<boolean> {
         try {
-            let category = cache.get(c_id);
+            const category = cache.get(c_id);
             if (!category) return false;
 
-            let badge = api.removeBadge(category.id, b_id);
+            const badge = api.removeBadge(category.id, b_id);
             if (!badge) return false;
 
             if (await BadgeStore.deregisterBadge(c_id, b_id)) {
@@ -187,7 +187,7 @@ export default (new class BadgeHandler {
                 cache.set(c_id, category);
             } else return false;
 
-            PluginLogger.info(`(${c_id}) \"${badge.tooltip}\" (${badge.id}) badge successfully deregistered.`);
+            PluginLogger.info(`(${c_id}) Badge "${badge.tooltip}" (${badge.id}) successfully deregistered.`);
             return true;
         } catch (error) {
             PluginLogger.warn(`Could not successfully deregister badge. (${c_id}) (${b_id})`);
@@ -201,7 +201,7 @@ export default (new class BadgeHandler {
             const category = cache.get(c_id);
             if (!category) return false;
 
-            let old = cache.get(value.c_id);
+            const old = cache.get(value.c_id);
             if (!old) return false;
 
             let badge = api.removeBadge(c_id !== value.c_id ? old.id : category.id, value.id);
@@ -221,7 +221,7 @@ export default (new class BadgeHandler {
             badge = api.addBadge(category.id, value.id);
             if (!badge) return false;
 
-            PluginLogger.info(`(${c_id}) \"${badge.tooltip}\" (${badge.id}) badge successfully updated.`);
+            PluginLogger.info(`(${c_id}) Badge "${badge.tooltip}" (${badge.id}) successfully updated.`);
             return true;
         } catch (error) {
             PluginLogger.warn(`Could not successfully update badge. (${c_id}) (${value.id})`);
@@ -234,14 +234,14 @@ export default (new class BadgeHandler {
         try {
             if (Array.from(cache.entries()).some((data: [string, IPBadgeCategory]) => {
                 return data[1].badges?.some(x => {
-                    let { id: _, c_id: __, profileBadge: ___, ...cached } = x;
-                    let { id: ____, c_id: _____, profileBadge: ______, ...object } = value;
+                    const { id: _, c_id: __, profileBadge: ___, ...cached } = x;
+                    const { id: ____, c_id: _____, profileBadge: ______, ...object } = value;
                     // PluginLogger.log(cached, object);
                     return JSON.stringify(cached) === JSON.stringify(object);
                 });
             })) return false;
 
-            let category = cache.get(c_id);
+            const category = cache.get(c_id);
             if (!category) return false;
 
             if (await BadgeStore.registerBadge(c_id, value)) {
@@ -250,10 +250,10 @@ export default (new class BadgeHandler {
                 cache.set(c_id, category);
             } else return false;
 
-            let badge = api.addBadge(category.id, value.id);
+            const badge = api.addBadge(category.id, value.id);
             if (!badge) return false;
 
-            PluginLogger.info(`(${c_id}) \"${badge.tooltip}\" (${badge.id}) badge successfully registered.`);
+            PluginLogger.info(`(${c_id}) Badge "${badge.tooltip}" (${badge.id}) successfully registered.`);
             return true;
         } catch (error) {
             PluginLogger.warn(`Could not successfully register badge. (${c_id}) (${value.id})`);

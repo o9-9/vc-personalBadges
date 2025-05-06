@@ -1,30 +1,29 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
 import "../../styles.css";
 
 import { openModal } from "@utils/modal";
 import { Flex, Menu, showToast, Toasts } from "@webpack/common";
+import { CategoryHandler } from "userplugins/personalBadges/utils/badge/data";
 
 import { cl } from "../..";
-import { CategoryModal } from "../modals/CategoryModal";
 import { IPBadgeCategory, IPersonalBadge } from "../../types";
+import * as bUtil from "../../utils/badge";
 import { DEFAULT_BADGE_CATEGORY_URL } from "../../utils/constants";
 import { openJSONFile, somethingWentWrong } from "../../utils/misc";
-
-import * as bUtil from "../../utils/badge";
-import { CategoryHandler } from "userplugins/personalBadges/utils/badge/data";
+import { CategoryModal } from "../modals/CategoryModal";
 
 
 export const BadgeMenuItemLabel = (badge: IPersonalBadge) => (
-    <Flex className={cl('flex-menu-item')}>
-        <img 
-            style={bUtil.defineStyleProps(badge.squircle)} 
-            src={bUtil.defineImage(badge.image)} 
-            height={32} 
+    <Flex className={cl("flex-menu-item")}>
+        <img
+            style={bUtil.defineStyleProps(badge.squircle)}
+            src={bUtil.defineImage(badge.image)}
+            height={32}
             width={32}
         />
         {badge.tooltip ?? "No Tooltip"}
@@ -33,7 +32,7 @@ export const BadgeMenuItemLabel = (badge: IPersonalBadge) => (
 
 
 export const CategoryMenuItemLabel = (category: IPBadgeCategory) => (
-    <Flex className={cl('flex-menu-item')}>
+    <Flex className={cl("flex-menu-item")}>
         <img
             style={bUtil.defineStyleProps(true)}
             src={!category.icon || category.icon.trim() === "" ? DEFAULT_BADGE_CATEGORY_URL : category.icon}
@@ -42,7 +41,7 @@ export const CategoryMenuItemLabel = (category: IPBadgeCategory) => (
         />
         {category.name}
     </Flex>
-)
+);
 
 
 export const CategoryElement = (id: string, c_id: string | undefined) => (
@@ -55,6 +54,26 @@ export const CategoryElement = (id: string, c_id: string | undefined) => (
     />
 );
 
+export async function importCategory() {
+    await openJSONFile(async (data: IPBadgeCategory) => {
+        if (Array.isArray(data))
+            data = data[0]; // well just in case
+
+        if (!data.name) return;
+        if (data.name.length > 20) data.name = data.name.substring(0, 20);
+
+        const object = {
+            id: "",
+            icon: data.icon,
+            name: data.name,
+            badges: data.badges
+        };
+
+        if (await CategoryHandler.register(object)) {
+            showToast(`Category "${data.name}" data has been imported, and registered. (This includes badges.)`, Toasts.Type.SUCCESS);
+        } else somethingWentWrong();
+    });
+}
 
 export const ImportCategoryElement = (id: string) => (
     <Menu.MenuItem
@@ -62,28 +81,9 @@ export const ImportCategoryElement = (id: string) => (
         key={id}
         label="Import Category"
         color="brand"
-        action={async () => {
-            await openJSONFile(async (data: IPBadgeCategory) => {
-                if (Array.isArray(data))
-                    data = data[0]; // well just in case
-
-                if (!data.name) return;
-                if (data.name.length > 20) data.name = data.name.substring(0, 20);
-
-                const object = {
-                    id: "",
-                    icon: data.icon,
-                    name: data.name,
-                    badges: data.badges
-                }
-
-                if (await CategoryHandler.register(object)) {
-                    showToast(`Successful! The data for this category has been imported and created. (This includes badges.)`, Toasts.Type.SUCCESS);
-                } else somethingWentWrong();
-            })
-        }}
+        action={async () => await importCategory()}
     />
-)
+);
 
 
-export * from './ManageBadges';
+export * from "./ManageBadges";

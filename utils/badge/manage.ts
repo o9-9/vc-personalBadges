@@ -1,8 +1,8 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
 import { Guild, User } from "discord-types/general";
 
@@ -18,8 +18,8 @@ export async function excludeBadge(user: User, c_id: string, b_id: string): Prom
         const badge = category.badges?.find(x => x.id === b_id);
         if (!badge) return false;
 
-        let wasIncluded: boolean = badge.users?.includes(user.id) ? badge.users.splice(badge.users.indexOf(user.id), 1).length > 0 : false;
-        
+        const wasIncluded: boolean = badge.users?.includes(user.id) ? badge.users.splice(badge.users.indexOf(user.id), 1).length > 0 : false;
+
         if (!badge.excluded) badge.excluded = [user.id];
         else if (!badge.excluded.includes(user.id)) badge.excluded.push(user.id);
         else if (!wasIncluded) return false;
@@ -40,7 +40,7 @@ export async function includeBadge(user: User, c_id: string, b_id: string): Prom
         const badge = category.badges?.find(x => x.id === b_id);
         if (!badge) return false;
 
-        let wasExcluded: boolean = badge.excluded?.includes(user.id) ? badge.excluded.splice(badge.excluded.indexOf(user.id), 1).length > 0 : false;
+        const wasExcluded: boolean = badge.excluded?.includes(user.id) ? badge.excluded.splice(badge.excluded.indexOf(user.id), 1).length > 0 : false;
 
         if (badge.global) {
             if (wasExcluded) {

@@ -1,18 +1,18 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
-import definePlugin from "@utils/types";
-import { openModal } from "@utils/modal";
 import { classNameFactory } from "@api/Styles";
+import { openModal } from "@utils/modal";
+import definePlugin from "@utils/types";
 
-import { pluginSettings } from "./utils/settings";
+import { addPatchContext_manageBadges, importCategory, removePatchContext_manageBadges } from "./components/context";
 import { BadgeModal } from "./components/modals/BadgeModal";
 import { BadgeHandler, CategoryHandler } from "./utils/badge/data";
-import { addPatchContext_manageBadges, removePatchContext_manageBadges } from "./components/context";
 import { DEFAULT_BADGE_CATEGORY, DEFAULT_BADGE_CATEGORY_URL } from "./utils/constants";
+import { pluginSettings } from "./utils/settings";
 
 
 export const cl = classNameFactory("pb-");
@@ -30,18 +30,17 @@ export default definePlugin({
 
     toolboxActions: {
         "Reinitialize Cache": async () => await BadgeHandler.re_init(),
-        "Open Badge Modal": () => openModal(props => <BadgeModal { ...props } />)
+        "Import Category": async () => await importCategory(),
+        "Open Badge Modal": () => openModal(props => <BadgeModal {...props} />)
     },
 
-    async start()
-    {
+    async start() {
         await BadgeHandler.init();
-        await CategoryHandler.register({id: "", name: DEFAULT_BADGE_CATEGORY, icon: DEFAULT_BADGE_CATEGORY_URL, badges: []});
+        await CategoryHandler.register({ id: "", name: DEFAULT_BADGE_CATEGORY, icon: DEFAULT_BADGE_CATEGORY_URL, badges: [] });
 
         addPatchContext_manageBadges();
     },
-    stop()
-    {
+    stop() {
         removePatchContext_manageBadges();
 
         BadgeHandler.de_init();

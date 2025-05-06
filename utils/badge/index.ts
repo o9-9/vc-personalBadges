@@ -1,17 +1,17 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
-import { BadgePosition, ProfileBadge } from '@api/Badges';
+import { BadgePosition, ProfileBadge } from "@api/Badges";
 
-import { DEFAULT_BADGE_URL, GITHUB_URL } from '../constants';
-import { IPersonalBadge } from '../../types';
+import { IPersonalBadge } from "../../types";
+import { DEFAULT_BADGE_URL, GITHUB_URL } from "../constants";
 
 
-export function isExcluded(userId: string, badge: IPersonalBadge): boolean { 
-    return badge.excluded?.includes(userId) ? false : true; 
+export function isExcluded(userId: string, badge: IPersonalBadge): boolean {
+    return !badge.excluded?.includes(userId);
 }
 
 export function defineProfileBadge(profileBadge: ProfileBadge | undefined): ProfileBadge {
@@ -44,7 +44,7 @@ export function defineStyleProps(squircle: boolean) {
     return {
         borderRadius: squircle ? "30%" : "50%",
         transform: "scale(0.9)"
-    }
+    };
 }
 
 export function iPersonalToProfile(i: IPersonalBadge): ProfileBadge {
@@ -55,8 +55,8 @@ export function iPersonalToProfile(i: IPersonalBadge): ProfileBadge {
         link: defineLink(i.link),
         shouldShow: ({ userId, guildId }) => defineInclusion(userId, guildId, i),
         props: { style: defineStyleProps(i.squircle) }
-    }
+    };
 }
 
 
-export * from './manage';
+export * from "./manage";
