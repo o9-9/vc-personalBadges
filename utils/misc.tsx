@@ -1,11 +1,11 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors*
+ * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ */
 
-import { Alerts, showToast, Toasts } from "@webpack/common";
 import { Link } from "@components/Link";
+import { Alerts, showToast, Toasts } from "@webpack/common";
 
 import { GITHUB_URL, PluginLogger } from "./constants";
 
@@ -17,8 +17,8 @@ export function quickAlert(title: any, body: React.ReactNode) {
 export function somethingWentWrong() {
     quickAlert("Something went wrong!", (
         <>
-            During the process, a problem was ran into. This could be the simple cause of creating duplicate badges or categories. This is <b>disallowed</b>.<br/><br/>
-            If this isn't the problem, please check the <b><Link href="https://developer.chrome.com/docs/devtools">Chrome DevTools</Link></b> for potentially logged errors.<br/><br/>
+            During the process, a problem was ran into. This could be the simple cause of creating duplicate badges or categories. This is <b>disallowed</b>.<br /><br />
+            If this isn't the problem, please check the <b><Link href="https://developer.chrome.com/docs/devtools">Chrome DevTools</Link></b> for potentially logged errors.<br /><br />
             Report an issue at the <b><Link href={GITHUB_URL}>GitHub</Link></b> of your results to debug the issue.
         </>
     ));
@@ -59,18 +59,16 @@ export async function openJSONFile(onLoad: (data: any) => any): Promise<any> {
 
             reader.onload = async () => {
                 try {
-                    let data: any;
-
-                    data = JSON.parse(reader.result as unknown as string);
+                    const data: any = JSON.parse(reader.result as unknown as string);
                     if (!data) return undefined;
 
                     await onLoad(data);
                 } catch (error) {
-                    showToast(`Failed. May contain an invalid json format.`, Toasts.Type.FAILURE);
+                    showToast("Failed. May contain an invalid json format.", Toasts.Type.FAILURE);
                     PluginLogger.error(error);
                 }
             };
-        }
+        };
 
         document.body.appendChild(input);
         input.click();
@@ -85,14 +83,12 @@ export async function openJSONFile(onLoad: (data: any) => any): Promise<any> {
 
         if (file) {
             try {
-                let data: any;
-
-                data = JSON.parse(new TextDecoder().decode(file.data));
+                const data: any = JSON.parse(new TextDecoder().decode(file.data));
                 if (!data) return undefined;
 
                 await onLoad(data);
             } catch (error) {
-                showToast(`Failed. May contain an invalid json format.`, Toasts.Type.FAILURE);
+                showToast("Failed. May contain an invalid json format.", Toasts.Type.FAILURE);
                 PluginLogger.error(error);
             }
         }
