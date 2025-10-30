@@ -5,8 +5,8 @@
  */
 
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
+import { Guild, User } from "@vencord/discord-types";
 import { Menu, showToast, Toasts } from "@webpack/common";
-import { Guild, User } from "discord-types/general";
 
 import { IPBadgeCategory, IPersonalBadge } from "../../types";
 import * as bUtil from "../../utils/badge";

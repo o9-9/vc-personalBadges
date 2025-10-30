@@ -7,12 +7,13 @@
 import "./modal.css";
 import "../../styles.css";
 
+import { Divider } from "@components/Divider";
 import { Link } from "@components/Link";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
 import { ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot, ModalSize } from "@utils/modal";
+import { SelectOption } from "@vencord/discord-types";
 import { Alerts, Button, Flex, Forms, Select, showToast, Text, TextInput, Toasts, useState } from "@webpack/common";
-import { SelectOption } from "@webpack/types";
 
 import { cl } from "../..";
 import { IPersonalBadge } from "../../types";
@@ -20,7 +21,6 @@ import { BadgeHandler } from "../../utils/badge/data";
 import { DEFAULT_BADGE_CATEGORY, DEFAULT_BADGE_URL, GITHUB_URL } from "../../utils/constants";
 import { openJSONFile, saveJSONFile, somethingWentWrong } from "../../utils/misc";
 import { BadgeMenuItemLabel, CategoryMenuItemLabel } from "../context";
-
 
 export function BadgeModal(props: ModalProps) {
     const defaultCategory = Array.from(BadgeHandler.getCache().entries()).find(x => x[1].name === DEFAULT_BADGE_CATEGORY)?.[1];
@@ -144,7 +144,7 @@ export function BadgeModal(props: ModalProps) {
                 }}
             />
 
-            <Flex style={{ flexDirection: "row-reverse" }}>
+            <Flex style={{ flexDirection: "row-reverse", gap: "16px" }}>
 
                 <Button
                     look={Button.Looks.LINK}
@@ -188,7 +188,7 @@ export function BadgeModal(props: ModalProps) {
                         onChange={v => setImage(v)}
                         value={image}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         The icon for the badge. Make sure it's a direct link to the image!<br />
                         <code>Default: <Link href={DEFAULT_BADGE_URL}>Icon</Link></code>
                     </Forms.FormText>
@@ -200,7 +200,7 @@ export function BadgeModal(props: ModalProps) {
                         onChange={v => setTooltip(v)}
                         value={tooltip}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         The text that appears when you hover over the badge.<br />
                         <code>Default: None</code>
                     </Forms.FormText>
@@ -212,7 +212,7 @@ export function BadgeModal(props: ModalProps) {
                         onChange={v => setLink(v)}
                         value={link}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         The link to open when you click on the badge.<br />
                         <code>Default: <Link href={GITHUB_URL}>GitHub</Link></code>
                     </Forms.FormText>
@@ -220,7 +220,7 @@ export function BadgeModal(props: ModalProps) {
 
             </div>
 
-            <Forms.FormDivider className={cl("form-divider")} />
+            <Divider className={cl("form-divider")} />
 
             <div className={cl("modal-form")}>
 
@@ -234,7 +234,7 @@ export function BadgeModal(props: ModalProps) {
                         serialize={identity}
                         isSelected={v => position === v}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         This will position the badge closer to the end or start of your badges.<br />
                         <code>Default: Start</code>
                     </Forms.FormText>
@@ -250,7 +250,7 @@ export function BadgeModal(props: ModalProps) {
                         serialize={identity}
                         isSelected={v => squircle === v}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         If <code>True</code>, this badge will instead appear as a rounded square rather than a circle.<br />
                         <code>Default: False</code>
                     </Forms.FormText>
@@ -266,7 +266,7 @@ export function BadgeModal(props: ModalProps) {
                         serialize={identity}
                         isSelected={v => global === v}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         If <code>True</code>, this badge will be applied to every user that you view.<br />
                         <code>Default: False</code>
                     </Forms.FormText>
@@ -318,7 +318,7 @@ export function BadgeModal(props: ModalProps) {
             {badge ?
                 <Button
                     disabled={!category || !badge}
-                    look={Button.Looks.OUTLINED}
+                    look={Button.Looks.FILLED}
                     color={Button.Colors.RED}
                     onClick={async () => {
                         if (!category) return;
@@ -336,7 +336,7 @@ export function BadgeModal(props: ModalProps) {
                 </Button>
                 : (<></>)}
 
-            <Button look={Button.Looks.OUTLINED} color={Button.Colors.PRIMARY} onClick={props.onClose}>
+            <Button look={Button.Looks.FILLED} color={Button.Colors.PRIMARY} onClick={props.onClose}>
                 Cancel
             </Button>
 

@@ -91,7 +91,7 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
                         onChange={v => setIcon(v)}
                         value={icon}
                     />
-                    <Forms.FormText className={Margins.top8} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top8}>
                         The icon for the category. Make sure it's a direct link to the image!<br />
                         <code>Default: <Link href={DEFAULT_BADGE_CATEGORY_URL}>Icon</Link></code>
                     </Forms.FormText>
@@ -134,7 +134,7 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
             {category ?
                 <Button
                     disabled={!category}
-                    look={Button.Looks.OUTLINED}
+                    look={Button.Looks.FILLED}
                     color={Button.Colors.RED}
                     onClick={async () => {
                         if (!category) return;
@@ -151,7 +151,7 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
                 </Button>
                 : (<></>)}
 
-            <Button look={Button.Looks.OUTLINED} color={Button.Colors.PRIMARY} onClick={props.onClose}>
+            <Button look={Button.Looks.FILLED} color={Button.Colors.PRIMARY} onClick={props.onClose}>
                 Cancel
             </Button>
 

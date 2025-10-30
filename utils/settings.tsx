@@ -24,15 +24,15 @@ export const pluginSettings = definePluginSettings({
         description: "Plugin Buttons",
         component: () => {
             return (
-                <Forms.FormSection>
-                    <Forms.FormText className={Margins.bottom16} type={Forms.FormText.Types.DESCRIPTION}>
+                <div className="section">
+                    <Forms.FormText className={Margins.bottom16}>
                         99% of the time you won't <i>need</i> to use this. All changes should be automatically applied without reinitializing the cache.
                         It is most useful with problems that could utilize it, such as fixing the ordering of badges!
                     </Forms.FormText>
 
                     <div className={cl("button-grid")}>
                         <Button
-                            look={Button.Looks.OUTLINED}
+                            look={Button.Looks.FILLED}
                             color={Button.Colors.PRIMARY}
                             onClick={async () => await BadgeHandler.re_init()}
                         >
@@ -46,7 +46,7 @@ export const pluginSettings = definePluginSettings({
                         </Button>
 
                         <Button
-                            look={Button.Looks.OUTLINED}
+                            look={Button.Looks.FILLED}
                             color={Button.Colors.PRIMARY}
                             onClick={async () => await VencordNative.native.openExternal(GITHUB_URL)}
                         >
@@ -54,10 +54,10 @@ export const pluginSettings = definePluginSettings({
                         </Button>
                     </div>
 
-                    <Forms.FormText className={Margins.top16} type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText className={Margins.top16}>
                         You can also enable the <code>VencordToolbox</code> plugin to have much quicker access to the badge modal!
                     </Forms.FormText>
-                </Forms.FormSection>
+                </div>
             );
         }
     }
