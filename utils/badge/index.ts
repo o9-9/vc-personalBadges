@@ -49,7 +49,7 @@ export function defineStyleProps(squircle: boolean) {
 
 export function iPersonalToProfile(i: IPersonalBadge): ProfileBadge {
     return {
-        image: defineImage(i.image),
+        iconSrc: defineImage(i.image),
         description: defineTooltip(i.tooltip),
         position: definePosition(i.position),
         link: defineLink(i.link),
