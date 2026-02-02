@@ -7,10 +7,11 @@
 import "../styles.css";
 
 import { definePluginSettings } from "@api/Settings";
+import { Button } from "@components/Button";
+import { Paragraph } from "@components/Paragraph";
 import { Margins } from "@utils/margins";
 import { openModal } from "@utils/modal";
 import { OptionType } from "@utils/types";
-import { Button, Forms } from "@webpack/common";
 
 import { cl } from "..";
 import { BadgeModal } from "../components/modals/BadgeModal";
@@ -25,15 +26,15 @@ export const pluginSettings = definePluginSettings({
         component: () => {
             return (
                 <div className="section">
-                    <Forms.FormText className={Margins.bottom16}>
+                    <Paragraph className={Margins.bottom16}>
                         99% of the time you won't <i>need</i> to use this. All changes should be automatically applied without reinitializing the cache.
                         It is most useful with problems that could utilize it, such as fixing the ordering of badges!
-                    </Forms.FormText>
+                    </Paragraph>
 
                     <div className={cl("button-grid")}>
                         <Button
-                            look={Button.Looks.FILLED}
-                            color={Button.Colors.PRIMARY}
+                            variant={"primary"}
+                            // color={Button.Colors.PRIMARY}
                             onClick={async () => await BadgeHandler.re_init()}
                         >
                             Reinitialize Cache
@@ -46,17 +47,17 @@ export const pluginSettings = definePluginSettings({
                         </Button>
 
                         <Button
-                            look={Button.Looks.FILLED}
-                            color={Button.Colors.PRIMARY}
+                            variant={"primary"}
+                            // color={Button.Colors.PRIMARY}
                             onClick={async () => await VencordNative.native.openExternal(GITHUB_URL)}
                         >
                             GitHub
                         </Button>
                     </div>
 
-                    <Forms.FormText className={Margins.top16}>
+                    <Paragraph className={Margins.top16}>
                         You can also enable the <code>VencordToolbox</code> plugin to have much quicker access to the badge modal!
-                    </Forms.FormText>
+                    </Paragraph>
                 </div>
             );
         }

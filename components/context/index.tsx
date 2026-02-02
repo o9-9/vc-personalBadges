@@ -6,8 +6,9 @@
 
 import "../../styles.css";
 
+import { Flex } from "@components/Flex";
 import { openModal } from "@utils/modal";
-import { Flex, Menu, showToast, Toasts } from "@webpack/common";
+import { Menu, showToast, Toasts } from "@webpack/common";
 import { CategoryHandler } from "userplugins/personalBadges/utils/badge/data";
 
 import { cl } from "../..";
