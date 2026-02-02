@@ -4,16 +4,21 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { BaseText } from "@components/BaseText";
+import { Button } from "@components/Button";
+import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
+import { Paragraph } from "@components/Paragraph";
 import { Margins } from "@utils/margins";
 import { ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot, ModalSize } from "@utils/modal";
-import { Alerts, Button, Flex, Forms, showToast, Text, TextInput, Toasts, useState } from "@webpack/common";
+import { Alerts, showToast, TextInput, Toasts, useState } from "@webpack/common";
 
 import { cl } from "../..";
 import { IPBadgeCategory, IPersonalBadge } from "../../types";
 import { BadgeHandler, CategoryHandler } from "../../utils/badge/data";
 import { DEFAULT_BADGE_CATEGORY, DEFAULT_BADGE_CATEGORY_URL } from "../../utils/constants";
 import { saveJSONFile, somethingWentWrong } from "../../utils/misc";
+import { ModalSection } from "./ModalSection";
 
 
 export interface CategoryModalProps {
@@ -38,21 +43,21 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
 
     return <ModalRoot {...props} size={ModalSize.SMALL}>
         <ModalHeader>
-
-            <Text
+            <BaseText
                 color="header-primary"
-                variant="heading-lg/semibold"
+                weight="semibold"
                 tag="h1"
             >
                 {category ? "Edit" : "Create"} Category
-            </Text>
+            </BaseText>
 
             <Flex style={{ flexDirection: "row-reverse" }} >
                 {category ?
                     <Button
                         disabled={!category}
-                        look={Button.Looks.LINK}
-                        color={Button.Colors.PRIMARY}
+                        style={{ marginLeft: 10 }}
+                        variant={"link"}
+                        // color={Button.Colors.PRIMARY}
                         onClick={async () => {
                             const { id: _, ...includedData } = category;
 
@@ -75,28 +80,26 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
 
         <ModalContent>
             <div className={cl("modal-form")} style={{ display: "inline", justifyContent: "center" }}>
-
-                <Forms.FormSection title="Name">
+                <ModalSection title="Name">
                     <TextInput style={{ width: "47%", marginBottom: "16px" }}
                         placeholder="✨ Sparkly ✨ Sector"
                         maxLength={20}
                         onChange={v => setName(v)}
                         value={name}
                     />
-                </Forms.FormSection>
+                </ModalSection>
 
-                <Forms.FormSection title="Icon">
+                <ModalSection title="Icon">
                     <TextInput
                         placeholder="i.imgur.com/.png"
                         onChange={v => setIcon(v)}
                         value={icon}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        The icon for the category. Make sure it's a direct link to the image!<br />
+                    <Paragraph className={Margins.top8}>
+                        The icon for the category. Make sure it's a direct link to the image!<br /><br />
                         <code>Default: <Link href={DEFAULT_BADGE_CATEGORY_URL}>Icon</Link></code>
-                    </Forms.FormText>
-                </Forms.FormSection>
-
+                    </Paragraph>
+                </ModalSection>
             </div>
         </ModalContent>
 
@@ -134,8 +137,8 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
             {category ?
                 <Button
                     disabled={!category}
-                    look={Button.Looks.FILLED}
-                    color={Button.Colors.RED}
+                    variant={"dangerPrimary"}
+                    // color={Button.Colors.RED}
                     onClick={async () => {
                         if (!category) return;
 
@@ -151,12 +154,12 @@ export function CategoryModal({ c_id, props }: CategoryModalProps) {
                 </Button>
                 : (<></>)}
 
-            <Button look={Button.Looks.FILLED} color={Button.Colors.PRIMARY} onClick={props.onClose}>
+            <Button variant={"none"} onClick={props.onClose}>
                 Cancel
             </Button>
 
         </ModalFooter>
-    </ModalRoot>;
+    </ModalRoot >;
 }
 
 

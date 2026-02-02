@@ -7,13 +7,17 @@
 import "./modal.css";
 import "../../styles.css";
 
+import { BaseText } from "@components/BaseText";
+import { Button } from "@components/Button";
 import { Divider } from "@components/Divider";
+import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
+import { Paragraph } from "@components/Paragraph";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
 import { ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot, ModalSize } from "@utils/modal";
 import { SelectOption } from "@vencord/discord-types";
-import { Alerts, Button, Flex, Forms, Select, showToast, Text, TextInput, Toasts, useState } from "@webpack/common";
+import { Alerts, Select, showToast, TextInput, Toasts, useState } from "@webpack/common";
 
 import { cl } from "../..";
 import { IPersonalBadge } from "../../types";
@@ -21,6 +25,8 @@ import { BadgeHandler } from "../../utils/badge/data";
 import { DEFAULT_BADGE_CATEGORY, DEFAULT_BADGE_URL, GITHUB_URL } from "../../utils/constants";
 import { openJSONFile, saveJSONFile, somethingWentWrong } from "../../utils/misc";
 import { BadgeMenuItemLabel, CategoryMenuItemLabel } from "../context";
+import { ModalSection } from "./ModalSection";
+
 
 export function BadgeModal(props: ModalProps) {
     const defaultCategory = Array.from(BadgeHandler.getCache().entries()).find(x => x[1].name === DEFAULT_BADGE_CATEGORY)?.[1];
@@ -105,14 +111,13 @@ export function BadgeModal(props: ModalProps) {
 
     return <ModalRoot {...props} size={ModalSize.LARGE}>
         <ModalHeader className={cl("modal-header")}>
-
-            <Text
+            <BaseText
                 color="header-primary"
-                variant="heading-lg/semibold"
+                weight="semibold"
                 tag="h1"
             >
                 {badge ? "Edit" : "Create"} Badge
-            </Text>
+            </BaseText>
 
             <Select popoutWidth={270}
                 options={categoryOptions}
@@ -147,8 +152,8 @@ export function BadgeModal(props: ModalProps) {
             <Flex style={{ flexDirection: "row-reverse", gap: "16px" }}>
 
                 <Button
-                    look={Button.Looks.LINK}
-                    color={Button.Colors.PRIMARY}
+                    variant={"link"}
+                    // color={Button.Colors.PRIMARY}
                     onClick={async () => {
                         await openJSONFile(async (data: IPersonalBadge) => {
                             if (Array.isArray(data))
@@ -164,8 +169,8 @@ export function BadgeModal(props: ModalProps) {
                 {badge ?
                     <Button
                         disabled={!badge}
-                        look={Button.Looks.LINK}
-                        color={Button.Colors.PRIMARY}
+                        variant={"link"}
+                        // color={Button.Colors.PRIMARY}
                         onClick={async () => {
                             const { id: _, c_id: __, profileBadge: ___, ...includedData } = badge;
                             saveJSONFile("p_badge.json", includedData);
@@ -181,50 +186,47 @@ export function BadgeModal(props: ModalProps) {
 
         <ModalContent>
             <div className={cl("modal-form")}>
-
-                <Forms.FormSection title="Image">
+                <ModalSection title="Image">
                     <TextInput
                         placeholder="i.imgur.com/.png"
                         onChange={v => setImage(v)}
                         value={image}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        The icon for the badge. Make sure it's a direct link to the image!<br />
+                    <Paragraph className={Margins.top8}>
+                        The icon for the badge. Make sure it's a direct link to the image!<br /><br />
                         <code>Default: <Link href={DEFAULT_BADGE_URL}>Icon</Link></code>
-                    </Forms.FormText>
-                </Forms.FormSection>
+                    </Paragraph>
+                </ModalSection>
 
-                <Forms.FormSection title="Tooltip">
+                <ModalSection title="Tooltip">
                     <TextInput
                         placeholder="You're so ✨ Sparkly ✨"
                         onChange={v => setTooltip(v)}
                         value={tooltip}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        The text that appears when you hover over the badge.<br />
+                    <Paragraph className={Margins.top8}>
+                        The text that appears when you hover over the badge.<br /><br />
                         <code>Default: None</code>
-                    </Forms.FormText>
-                </Forms.FormSection>
+                    </Paragraph>
+                </ModalSection>
 
-                <Forms.FormSection title="Link">
+                <ModalSection title="Link">
                     <TextInput
                         placeholder="https://..."
                         onChange={v => setLink(v)}
                         value={link}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        The link to open when you click on the badge.<br />
+                    <Paragraph className={Margins.top8}>
+                        The link to open when you click on the badge.<br /><br />
                         <code>Default: <Link href={GITHUB_URL}>GitHub</Link></code>
-                    </Forms.FormText>
-                </Forms.FormSection>
-
+                    </Paragraph>
+                </ModalSection>
             </div>
 
             <Divider className={cl("form-divider")} />
 
             <div className={cl("modal-form")}>
-
-                <Forms.FormSection title="Position">
+                <ModalSection title="Position">
                     <Select
                         options={[
                             { label: "Start", value: "Start" },
@@ -234,13 +236,13 @@ export function BadgeModal(props: ModalProps) {
                         serialize={identity}
                         isSelected={v => position === v}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        This will position the badge closer to the end or start of your badges.<br />
+                    <Paragraph style={{ marginTop: 8 }}>
+                        This will position the badge closer to the end or start of your badges.<br /><br />
                         <code>Default: Start</code>
-                    </Forms.FormText>
-                </Forms.FormSection>
+                    </Paragraph>
+                </ModalSection>
 
-                <Forms.FormSection title="Is Squircle">
+                <ModalSection title="Is Squircle">
                     <Select
                         options={[
                             { label: "True", value: true },
@@ -250,13 +252,13 @@ export function BadgeModal(props: ModalProps) {
                         serialize={identity}
                         isSelected={v => squircle === v}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        If <code>True</code>, this badge will instead appear as a rounded square rather than a circle.<br />
+                    <Paragraph className={Margins.top8}>
+                        If <code>True</code>, this badge will instead appear as a rounded square rather than a circle.<br /><br />
                         <code>Default: False</code>
-                    </Forms.FormText>
-                </Forms.FormSection>
+                    </Paragraph>
+                </ModalSection>
 
-                <Forms.FormSection title="Is Global">
+                <ModalSection title="Is Global">
                     <Select
                         options={[
                             { label: "True", value: true },
@@ -266,12 +268,11 @@ export function BadgeModal(props: ModalProps) {
                         serialize={identity}
                         isSelected={v => global === v}
                     />
-                    <Forms.FormText className={Margins.top8}>
-                        If <code>True</code>, this badge will be applied to every user that you view.<br />
+                    <Paragraph className={Margins.top8}>
+                        If <code>True</code>, this badge will be applied to every user that you view.<br /><br />
                         <code>Default: False</code>
-                    </Forms.FormText>
-                </Forms.FormSection>
-
+                    </Paragraph>
+                </ModalSection>
             </div>
         </ModalContent>
 
@@ -318,8 +319,8 @@ export function BadgeModal(props: ModalProps) {
             {badge ?
                 <Button
                     disabled={!category || !badge}
-                    look={Button.Looks.FILLED}
-                    color={Button.Colors.RED}
+                    variant={"dangerPrimary"}
+                    // color={Button.Colors.RED}
                     onClick={async () => {
                         if (!category) return;
                         if (!badge) return;
@@ -336,12 +337,12 @@ export function BadgeModal(props: ModalProps) {
                 </Button>
                 : (<></>)}
 
-            <Button look={Button.Looks.FILLED} color={Button.Colors.PRIMARY} onClick={props.onClose}>
+            <Button variant={"none"} onClick={props.onClose}>
                 Cancel
             </Button>
 
         </ModalFooter>
-    </ModalRoot>;
+    </ModalRoot >;
 }
 
 
